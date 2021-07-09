@@ -27,7 +27,8 @@ const MathField = ({setLatex, setExpression, latex, expression}) => {
                 onChange={onChange}
                 style={{
                     fontSize: '20px',
-                    width: '200px',
+                    minWidth: '200px',
+                    maxWidth: '85%',
                     margin: '30px 6px 6px 6px',
                     textAlign: 'center',
                     backgroundColor: hasError ? 'rgba(255, 204, 204, 1)' : 'rgba(255, 255, 255, 0.9)',

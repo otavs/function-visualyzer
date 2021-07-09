@@ -29,5 +29,7 @@ test('Test the latex expression compiler', () => {
     expect(compileAndEvaluate('e')).toBe(E)
     expect(compileAndEvaluate('\\ln e')).toBe(log(E))
     expect(compileAndEvaluate('\\left|-x\\right|')).toBe(abs(-x))
-    //expect(compileAndEvaluate('\\left|\\sin x\\ln y\\right|')).toBe(abs(sin(x)*log(x)))
+    expect(compileAndEvaluate('\\left|\\sin x\\ln x\\cos x\\right|')).toBe(abs(sin(x)*log(x)*cos(x))) 
+    expect(compileAndEvaluate('\\exp x+1')).toBe(exp(x) + 1)
+    expect(compileAndEvaluate('\\operatorname{abs}\\left(-x\\right)')).toBe(abs(-x))
 })

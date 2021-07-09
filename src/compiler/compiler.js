@@ -1,4 +1,5 @@
-import { parse as parseLatex } from '@cortex-js/compute-engine'
+import { parse } from '@cortex-js/compute-engine'
+import dictionary from './dictionary'
 
 const constants = {
     x: 'x',
@@ -8,13 +9,18 @@ const constants = {
 	ExponentialE: 'E'
 }
 
+const preprocess = (latex) => latex
+    .replace(/\\operatorname{abs}/g, '\\abs ')
+    .replace(/\\operatorname{fract}/g, '\\fract ')
+    .replace(/\\operatorname{sign}/g, '\\sign ')
+
 const compileToGlsl = (latex) => {
     try {
-        const tokens = parseLatex(latex)
+        const tokens = parse(preprocess(latex), {dictionary})
         console.log(tokens)
-        const r = compile(tokens)
-        console.log(r)
-        return r
+        const res = compile(tokens)
+        console.log(res)
+        return res
     }
     catch(e) {
         console.log(e)
@@ -34,14 +40,7 @@ const compile = (token) => {
             case 'Subtract':
                 return `(${compile(token[1])} - ${compile(token[2])})`
             case 'Multiply':
-                switch(token[1]) {
-                    case '\\ln':
-                        if(token.length <= 3)
-                            return `log(${compile(token[2])})`
-                        return `(log(${compile(token[2])}) * ${token.slice(3).map((t) => compile(t)).join(' * ')})`
-                    default:
-                        return `(${token.slice(1).map((t) => compile(t)).join(' * ')})`
-                }
+                return `(${token.slice(1).map((t) => compile(t)).join(' * ')})`
             case 'Divide':
                 return `(${compile(token[1])} / ${compile(token[2])})`
             case 'Sqrt':
@@ -64,6 +63,16 @@ const compile = (token) => {
                 return `abs(${compile(token[1])})`
             case 'Negate':
                 return `-(${compile(token[1])})`
+            case '\\ln':
+                return `log(${compile(token[1])})`
+            case '\\exp':
+                return `exp(${compile(token[1])})`
+            case '\\abs':
+                return `abs(${compile(token[1])})`
+            case '\\sign':
+                return `sign(${compile(token[1])})`
+            case '\\fract':
+                return `fract(${compile(token[1])})`
             default:
                 throw new Error(`Invalid operation token '${op}'`)
         }

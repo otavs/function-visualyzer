@@ -4,6 +4,7 @@ import { addStyles as addStylesMathQuill, EditableMathField } from 'react-mathqu
 import { compileToGlsl } from './compiler/compiler'
 import mathFieldConfig from './mathFieldConfig'
 import Canvas from './Canvas'
+import UndoRedoManager from './UndoRedoManager'
 
 addStylesMathQuill()
 
@@ -33,6 +34,7 @@ const MathField = ({setLatex, setExpression, latex, expression}) => {
                     textAlign: 'center',
                     backgroundColor: hasError ? 'rgba(255, 204, 204, 1)' : 'rgba(255, 255, 255, 0.9)',
                 }}
+                mathquillDidMount={mathField => new UndoRedoManager(mathField, mathField.el())}
             />
             {/* <p>{latex}</p>
             <p>{expression}</p> */}

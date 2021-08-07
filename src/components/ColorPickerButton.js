@@ -13,6 +13,7 @@ export default function ColorPickerButton({color, setColor}) {
             boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
             display: 'inline-block',
             cursor: 'pointer',
+            boxShadow: '0 3px 6px rgba(0, 0, 0, 0.2)',
         },
         color: {
             width: '20px',

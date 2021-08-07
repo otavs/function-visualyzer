@@ -22,8 +22,8 @@ const compileToGlsl = (latex) => {
         console.log(res)
         return res
     }
-    catch(e) {
-        console.log(e)
+    catch(error) {
+        console.log(error)
     }
 }
 

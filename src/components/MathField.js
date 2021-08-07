@@ -1,18 +1,17 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { addStyles as addStylesMathQuill, EditableMathField } from 'react-mathquill'
-import { compileToGlsl } from './compiler/compiler'
-import mathFieldConfig from './mathFieldConfig'
-import Canvas from './Canvas'
-import UndoRedoManager from './UndoRedoManager'
+import { EditableMathField } from 'react-mathquill'
+import { compileToGlsl } from '../compiler/compiler'
+import mathFieldConfig from '../mathFieldConfig'
+import UndoRedoManager from '../UndoRedoManager'
+import { useGlobalState } from 'state'
 
-addStylesMathQuill()
-
-const latexInit = '\\frac{\\left(x^2+y^2\\right)}{x}-0.7t'
-const expInit = compileToGlsl(latexInit)
-
-const MathField = ({setLatex, setExpression, latex, expression}) => {
+export default function MathField() {
+    const [latex, setLatex] = useGlobalState('latex')
+    const [expression, setExpression] = useGlobalState('expression')
+    
     const [hasError, setHasError] = useState(false)
+    
     const onChange = async mathField => {
         setLatex(mathField.latex())
         const expressionGlsl = compileToGlsl(mathField.latex())
@@ -20,10 +19,11 @@ const MathField = ({setLatex, setExpression, latex, expression}) => {
             setExpression(expressionGlsl)
         setHasError(!expressionGlsl)
     }
+    
     return <>
         <MathFieldDiv>
             <EditableMathField
-                latex={latexInit}
+                latex={latex}
                 config={mathFieldConfig}
                 onChange={onChange}
                 style={{
@@ -43,20 +43,12 @@ const MathField = ({setLatex, setExpression, latex, expression}) => {
 }
 
 const MathFieldDiv = styled.div`
-    position: relative;
-    z-index: 1;
+    position: absolute;
+    overflow: auto;
+    width: 100%;
     /* background-color: red; */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 `
-
-export default function App() {
-    const [latex, setLatex] = useState(latexInit)
-    const [expression, setExpression] = useState(expInit)
-    return <>
-        <Canvas expression={expression} />
-        <MathField latex={latex} setLatex={setLatex} expression={expression} setExpression={setExpression} />
-    </>
-}

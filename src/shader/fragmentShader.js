@@ -6,9 +6,12 @@ const fragmentShader = exp =>
 
 precision highp float;
 
-uniform vec2 u_mouse;
-uniform vec2 u_resolution;
 uniform float u_time;
+uniform vec2 u_resolution;
+uniform vec2 u_mouse;
+uniform vec4 primaryColor;
+uniform vec4 secondaryColor;
+uniform int u_colorMode;
 
 in vec2 texCoord;
 
@@ -30,6 +33,10 @@ float f(vec2 p, float t) {
     return ${exp};
 }
 
+float triangleWave(float x) {
+    return 2.0*abs(x-floor(x+0.5));
+}
+
 void main(void) {
     vec2 p = (gl_FragCoord.xy / u_resolution.xy - .5) * zoom;
     vec2 mouse = (u_mouse.xy / u_resolution.xy - .5) * zoom;
@@ -39,7 +46,10 @@ void main(void) {
     mouse.x *= 1.0 * u_resolution.x / u_resolution.y;
     
     vec3 color = vec3(f(p - mouse, u_time), 1.0, 1.0);
-    fragmentColor = vec4(hsv2rgb(color), 1.0);
+    if(u_colorMode == 1)
+        fragmentColor = fragmentColor = vec4(hsv2rgb(color), 1.0);
+    else 
+        fragmentColor = mix(primaryColor, secondaryColor, triangleWave(f(p - mouse, u_time)));
 }
 `
 

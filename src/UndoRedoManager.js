@@ -47,6 +47,7 @@ export default function UndoRedoManager(pMathField, pElement) {
     this.ZIsDown = false;
     this.currentState = 0;
     this.buffSize = 50;
+    this.isFieldEmpty = this.mathField.latex() == ''
 
     this.rearrangeTypedArray = () => {
         if (this.typedHistory.length > this.buffSize) {
@@ -120,9 +121,11 @@ export default function UndoRedoManager(pMathField, pElement) {
         }
     };
 
-    this.contentEl.addEventListener('keyup', (e) => {
+    this.contentEl.addEventListener('keyup', e => {
+        if(this.mathField.latex() == '' && this.isFieldEmpty)
+            return
+        this.isFieldEmpty = this.mathField.latex() == ''
         this.checkIfSpecialKeysAreUpAndSetStates(e.which);
-        
         //log in typedHistory
         if ((this.isKeyIsUnaffecting(e.which) === false)
             && (this.ctrlIsDown === false || (this.ctrlIsDown && e.which === V_KEYCODE))) {

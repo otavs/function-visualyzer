@@ -9,15 +9,15 @@ export const { useGlobalState } = createGlobalState({
     expression: compileToGlsl(latexInit),
     colorMode: ColorMode.custom,
     primaryColor: {
-        r: 255,
+        r: 25,
         g: 0,
-        b: 0,
+        b: 255,
         a: 1,
     },
     secondaryColor: {
         r: 0,
-        g: 0,
-        b: 0,
+        g: 255,
+        b: 241,
         a: 1,
     },
 })
